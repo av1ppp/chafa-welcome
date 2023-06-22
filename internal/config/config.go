@@ -1,50 +1,41 @@
 package config
 
 import (
-	"errors"
 	"os"
-	"strings"
 )
 
 type Config struct {
 	picturePath string
+	chafaBin    string
+	chafaArgs   []string
 }
 
 func (self *Config) PicturePath() string {
 	return self.picturePath
 }
 
-var incorrectFileSyntaxErr = errors.New("incorrect file syntax")
-var validateErr = errors.New("failed to validate config")
+func (self *Config) ChafaBin() string {
+	return self.chafaBin
+}
+
+func (self *Config) ChafaArgs() []string {
+	return self.chafaArgs
+}
 
 func ParseFile(name string) (*Config, error) {
+	err := createDefaultFileIfNotExists(name)
+	if err != nil {
+		return nil, err
+	}
+
 	data, err := os.ReadFile(name)
 	if err != nil {
 		return nil, err
 	}
 
-	config := &Config{}
-
-	rows := strings.Split(string(data), "\n")
-	for _, row := range rows {
-		if len(strings.TrimSpace(row)) == 0 {
-			continue
-		}
-
-		splitRow := strings.SplitN(row, "=", 2)
-		if len(splitRow) != 2 {
-			return nil, incorrectFileSyntaxErr
-		}
-
-		key := splitRow[0]
-		value := splitRow[1]
-
-		switch key {
-		case "picture":
-			config.picturePath = value
-		default:
-			return nil, incorrectFileSyntaxErr
-		}
+	config, err := unmarshal(data)
+	if err != nil {
+		return nil, err
 	}
 
 	if err = validate(config); err != nil {
@@ -54,11 +45,14 @@ func ParseFile(name string) (*Config, error) {
 	return config, nil
 }
 
-func validate(config *Config) error {
-	_, err := os.Stat(config.picturePath)
+func createDefaultFileIfNotExists(name string) error {
+	_, err := os.Stat(name)
 	if err != nil {
-		return errors.Join(validateErr, err)
-	}
+		if !os.IsNotExist(err) {
+			return err
+		}
 
+		return os.WriteFile(name, defaultConfigData, os.ModePerm)
+	}
 	return nil
 }
