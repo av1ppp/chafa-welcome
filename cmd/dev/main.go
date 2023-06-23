@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
+
 	"github.com/av1ppp/chafa-welcome/internal/config"
 	"github.com/av1ppp/chafa-welcome/internal/global"
 )
@@ -38,7 +40,8 @@ func innerMain() error {
 		return err
 	}
 
-	chafaOutput = strings.Replace(chafaOutput, "\n", "lorem: ipsum\n", -1)
+	replaceNewValue := "  " + color.CyanString("Lorem:") + color.RedString("Ipsum") + "\n"
+	chafaOutput = strings.Replace(chafaOutput, "\n", replaceNewValue, -1)
 	fmt.Println(chafaOutput)
 
 	return nil
