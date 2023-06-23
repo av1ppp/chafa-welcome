@@ -17,14 +17,14 @@ func main() {
 func innerMain() error {
 	homeDir := global.HomeDir()
 	configPath := filepath.Join(homeDir, "config")
-	config, err := config.ParseFile(configPath)
+	config_, err := config.ParseFile(configPath)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("PicturePath:", config.PicturePath())
-	fmt.Println("ChafaBin:", config.ChafaBin())
-	fmt.Println("ChafaArgs:", config.ChafaArgs())
+	fmt.Println("PicturePath:", config_.PicturePath())
+	fmt.Println("ChafaBin:", config_.ChafaBin())
+	fmt.Println("ChafaArgs:", config_.ChafaArgs())
 
 	return nil
 }
