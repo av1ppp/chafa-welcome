@@ -19,6 +19,9 @@ func main() {
 }
 
 func innerMain() error {
+	gap := strings.Repeat(" ", 2)               // move to config file
+	pictureMarginLeft := strings.Repeat(" ", 1) // move to config file
+
 	homeDir := global.HomeDir()
 	configPath := filepath.Join(homeDir, "config")
 	config_, err := config.ParseFile(configPath)
@@ -48,12 +51,12 @@ func innerMain() error {
 	//chafaOutput = strings.Replace(chafaOutput, "\n", replaceNewValue, -1)
 
 	resultBuilder := strings.Builder{}
-	_ = info
+
 	for i, line := range strings.Split(chafaOutput, "\n") {
 		if i < len(infoLines) {
-			resultBuilder.WriteString(line + infoLines[i] + "\n")
+			resultBuilder.WriteString(pictureMarginLeft + line + gap + infoLines[i] + "\n")
 		} else {
-			resultBuilder.WriteString(line + "\n")
+			resultBuilder.WriteString(pictureMarginLeft + line + "\n")
 		}
 	}
 	fmt.Println(resultBuilder.String())
