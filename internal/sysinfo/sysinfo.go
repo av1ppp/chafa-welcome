@@ -53,7 +53,7 @@ func (self *SystemInfo) String() string {
 	builder := strings.Builder{}
 
 	builder.WriteString(self.Header + "\n")
-	builder.WriteString(strings.Repeat("=", len(self.Header)) + "\n")
+	builder.WriteString(strings.Repeat("~", len(self.Header)) + "\n")
 
 	builder.WriteString("OS: " + self.OS + "\n")
 	builder.WriteString("Kernel: " + self.Kernel + "\n")
