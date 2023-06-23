@@ -1,23 +1,9 @@
 package config
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 )
-
-var chafaArgs = []string{
-	"Background", // --bg
-	"Colors",     // --colors
-}
-
-func isChafaArg(arg string) bool {
-	for _, arg_ := range chafaArgs {
-		if arg == arg_ {
-			return true
-		}
-	}
-	return false
-}
 
 func isEmptyString(s string) bool {
 	return len(strings.TrimSpace(s)) == 0
@@ -45,10 +31,12 @@ func setupKeyValueForConfig(key, value string, config *Config, row string, rowN 
 		return nil
 	}
 
-	if isChafaArg(key) {
-		if len(value) > 0 {
-			config.chafaArgs = append(config.chafaArgs, fmt.Sprintf("--%s=%s", key, value))
+	if key == "Width" {
+		width, err := strconv.Atoi(value)
+		if err != nil {
+			return err
 		}
+		config.width = width
 		return nil
 	}
 
@@ -61,9 +49,7 @@ func setupKeyValueForConfig(key, value string, config *Config, row string, rowN 
 }
 
 func unmarshal(data []byte) (*Config, error) {
-	config := &Config{
-		chafaArgs: []string{},
-	}
+	config := &Config{}
 
 	rows := strings.Split(string(data), "\n")
 

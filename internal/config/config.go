@@ -7,7 +7,7 @@ import (
 type Config struct {
 	picturePath string
 	chafaBin    string
-	chafaArgs   []string
+	width       int
 }
 
 func (self *Config) PicturePath() string {
@@ -18,8 +18,8 @@ func (self *Config) ChafaBin() string {
 	return self.chafaBin
 }
 
-func (self *Config) ChafaArgs() []string {
-	return self.chafaArgs
+func (self *Config) Width() int {
+	return self.width
 }
 
 func ParseFile(name string) (*Config, error) {
@@ -51,7 +51,6 @@ func createDefaultFileIfNotExists(name string) error {
 		if !os.IsNotExist(err) {
 			return err
 		}
-
 		return os.WriteFile(name, defaultConfigData, os.ModePerm)
 	}
 	return nil

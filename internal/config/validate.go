@@ -7,15 +7,23 @@ import (
 )
 
 func validate(config *Config) error {
-	if config.picturePath != "" {
-		_, err := os.Stat(config.picturePath)
-		if err != nil {
-			return errors.Wrap(err, validationErr.Error())
-		}
+	// picturePath
+	if config.picturePath == "" {
+		return errors.Wrap(&errorParameterMustBeSpecified{"Picture"}, validationErr.Error())
+	}
+	_, err := os.Stat(config.picturePath)
+	if err != nil {
+		return errors.Wrap(err, validationErr.Error())
 	}
 
+	// chafaBin
 	if config.chafaBin == "" {
-		return errors.Wrap(&errorParameterMustBeSpecefied{"Chafa"}, validationErr.Error())
+		return errors.Wrap(&errorParameterMustBeSpecified{"Chafa"}, validationErr.Error())
+	}
+
+	// width
+	if config.width == 0 {
+		return errors.Wrap(&errorParameterMustBeSpecified{"Width"}, validationErr.Error())
 	}
 
 	return nil

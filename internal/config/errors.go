@@ -5,11 +5,11 @@ import (
 	"fmt"
 )
 
-type errorParameterMustBeSpecefied struct {
+type errorParameterMustBeSpecified struct {
 	param string
 }
 
-func (self *errorParameterMustBeSpecefied) Error() string {
+func (self *errorParameterMustBeSpecified) Error() string {
 	return fmt.Sprintf("parameter '%s' must be specified", self.param)
 }
 
