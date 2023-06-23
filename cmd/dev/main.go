@@ -3,11 +3,10 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/av1ppp/chafa-welcome/internal/sysinfo"
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/fatih/color"
 
 	"github.com/av1ppp/chafa-welcome/internal/config"
 	"github.com/av1ppp/chafa-welcome/internal/global"
@@ -35,14 +34,29 @@ func innerMain() error {
 	// ====
 	// ====
 
+	info, err := sysinfo.New()
+	if err != nil {
+		return err
+	}
+	infoLines := strings.Split(info.String(), "\n")
+
 	chafaOutput, err := chafaExecute(config_)
 	if err != nil {
 		return err
 	}
+	//replaceNewValue := "  " + color.CyanString("Lorem:") + color.RedString("Ipsum") + "\n"
+	//chafaOutput = strings.Replace(chafaOutput, "\n", replaceNewValue, -1)
 
-	replaceNewValue := "  " + color.CyanString("Lorem:") + color.RedString("Ipsum") + "\n"
-	chafaOutput = strings.Replace(chafaOutput, "\n", replaceNewValue, -1)
-	fmt.Println(chafaOutput)
+	resultBuilder := strings.Builder{}
+	_ = info
+	for i, line := range strings.Split(chafaOutput, "\n") {
+		if i < len(infoLines) {
+			resultBuilder.WriteString(line + infoLines[i] + "\n")
+		} else {
+			resultBuilder.WriteString(line + "\n")
+		}
+	}
+	fmt.Println(resultBuilder.String())
 
 	return nil
 }
