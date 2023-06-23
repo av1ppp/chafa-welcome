@@ -5,7 +5,7 @@ import (
 )
 
 func collectOS() (string, error) {
-	data, err := readFile("/etc/os-release")
+	data, err := execute("sh", "-c", "cat /etc/*-release")
 	if err != nil {
 		return "", err
 	}

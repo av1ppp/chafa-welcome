@@ -5,12 +5,19 @@ import (
 )
 
 type SystemInfo struct {
-	OS     string
-	Kernel string
-	Uptime string
+	Header   string
+	OS       string
+	Kernel   string
+	Uptime   string
+	Packages string
 }
 
 func New() (*SystemInfo, error) {
+	header, err := collectHeader()
+	if err != nil {
+		return nil, err
+	}
+
 	os, err := collectOS()
 	if err != nil {
 		return nil, err
@@ -26,18 +33,32 @@ func New() (*SystemInfo, error) {
 		return nil, err
 	}
 
+	packages, err := collectPackages()
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO add: username, hostname, local ip, shell, cpu, gpu, ram
+
 	return &SystemInfo{
-		OS:     os,
-		Kernel: kernel,
-		Uptime: uptime,
+		Header:   header,
+		OS:       os,
+		Kernel:   kernel,
+		Uptime:   uptime,
+		Packages: packages,
 	}, nil
 }
 
 func (self *SystemInfo) String() string {
 	builder := strings.Builder{}
+
+	builder.WriteString(self.Header + "\n")
+	builder.WriteString(strings.Repeat("=", len(self.Header)) + "\n")
+
 	builder.WriteString("OS: " + self.OS + "\n")
 	builder.WriteString("Kernel: " + self.Kernel + "\n")
 	builder.WriteString("Uptime: " + self.Uptime + "\n")
+	builder.WriteString("Packages: " + self.Packages + "\n")
 	// TODO remove last \n
 
 	str := builder.String()
