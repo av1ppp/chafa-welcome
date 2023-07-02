@@ -33,32 +33,49 @@ func innerMain() error {
 	fmt.Println("ChafaBin:", config_.ChafaBin())
 	fmt.Println("Width:", config_.Width())
 
-	// ====
-	// ====
-	// ====
-
-	info, err := sysinfo.New()
+	info, err := sysinfo.Collect()
 	if err != nil {
 		return err
 	}
 	infoLines := strings.Split(info.String(), "\n")
+	infoNumberLines := len(infoLines)
+	fmt.Println("infoNumberLines:", infoNumberLines)
 
 	chafaOutput, err := chafaExecute(config_)
 	if err != nil {
 		return err
 	}
-	//replaceNewValue := "  " + color.CyanString("Lorem:") + color.RedString("Ipsum") + "\n"
-	//chafaOutput = strings.Replace(chafaOutput, "\n", replaceNewValue, -1)
+	chafaLines := strings.Split(chafaOutput, "\n")
+	chafaNumberLines := len(chafaLines) - 1
+	chafaEmptyRow := strings.Repeat(" ", config_.Width())
+	fmt.Println("chafaNumberLines:", chafaNumberLines)
+
+	maxLines := 0
+	if infoNumberLines > chafaNumberLines {
+		maxLines = infoNumberLines
+	} else {
+		maxLines = chafaNumberLines
+	}
+	fmt.Println("maxLines:", maxLines)
 
 	resultBuilder := strings.Builder{}
 
-	for i, line := range strings.Split(chafaOutput, "\n") {
-		if i < len(infoLines) {
-			resultBuilder.WriteString(pictureMarginLeft + line + gap + infoLines[i] + "\n")
+	for i := 0; i < maxLines; i++ {
+		if i < chafaNumberLines {
+			// with picture row
+			if i < infoNumberLines {
+				// with info row
+				resultBuilder.WriteString(pictureMarginLeft + chafaLines[i] + gap + infoLines[i] + "\n")
+			} else {
+				// without info row
+				resultBuilder.WriteString(pictureMarginLeft + chafaLines[i] + "\n")
+			}
 		} else {
-			resultBuilder.WriteString(pictureMarginLeft + line + "\n")
+			// without picture row
+			resultBuilder.WriteString(pictureMarginLeft + chafaEmptyRow + gap + infoLines[i] + "\n")
 		}
 	}
+
 	fmt.Println(resultBuilder.String())
 
 	return nil

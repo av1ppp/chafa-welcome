@@ -32,3 +32,7 @@ func findAndTrimLinePrefix(data string, prefix string) (string, bool) {
 	}
 	return "", false
 }
+
+func bToMB(b uint64) uint64 {
+	return b / 1024 / 1024
+}
