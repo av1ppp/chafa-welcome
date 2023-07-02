@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"os/exec"
+	"github.com/av1ppp/chafa-welcome/internal/chafa"
 	"path/filepath"
 	"strings"
 
@@ -23,15 +22,15 @@ func innerMain() error {
 	pictureMarginLeft := strings.Repeat(" ", 1) // move to config file
 
 	homeDir := global.HomeDir()
-	configPath := filepath.Join(homeDir, "config")
-	config_, err := config.ParseFile(configPath)
+	confPath := filepath.Join(homeDir, "config")
+	conf, err := config.ParseFile(confPath)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("PicturePath:", config_.PicturePath)
-	fmt.Println("ChafaBin:", config_.ChafaBin)
-	fmt.Println("Width:", config_.Width)
+	fmt.Println("PicturePath:", conf.PicturePath)
+	fmt.Println("ChafaBin:", conf.ChafaBin)
+	fmt.Println("Width:", conf.Width)
 
 	info, err := sysinfo.Collect()
 	if err != nil {
@@ -41,13 +40,13 @@ func innerMain() error {
 	infoNumberLines := len(infoLines)
 	fmt.Println("infoNumberLines:", infoNumberLines)
 
-	chafaOutput, err := chafaExecute(config_)
+	chafaOutput, err := chafa.Execute(conf.ChafaBin, conf.PicturePath, chafa.WithSize(conf.Width, 0))
 	if err != nil {
 		return err
 	}
 	chafaLines := strings.Split(chafaOutput, "\n")
 	chafaNumberLines := len(chafaLines) - 1
-	chafaEmptyRow := strings.Repeat(" ", config_.Width)
+	chafaEmptyRow := strings.Repeat(" ", conf.Width)
 	fmt.Println("chafaNumberLines:", chafaNumberLines)
 
 	maxLines := 0
@@ -77,26 +76,5 @@ func innerMain() error {
 	}
 
 	fmt.Println(resultBuilder.String())
-
 	return nil
-}
-
-func chafaExecute(c *config.Config) (string, error) {
-	args := []string{}
-
-	if c.Width != 0 {
-		args = append(args, fmt.Sprintf("--size=%d", c.Width))
-	}
-
-	args = append(args, c.PicturePath)
-
-	cmd := exec.Command(c.ChafaBin, args...)
-	stdout := &bytes.Buffer{}
-	cmd.Stdout = stdout
-
-	if err := cmd.Run(); err != nil {
-		return "", err
-	}
-
-	return stdout.String(), nil
 }
