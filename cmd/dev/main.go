@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/av1ppp/chafa-welcome/internal/chafa"
 	"path/filepath"
 	"strings"
 
+	"github.com/av1ppp/chafa-welcome/internal/chafa"
 	"github.com/av1ppp/chafa-welcome/internal/config"
 	"github.com/av1ppp/chafa-welcome/internal/global"
 	"github.com/av1ppp/chafa-welcome/internal/sysinfo"
