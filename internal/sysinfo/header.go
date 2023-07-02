@@ -1,21 +1,18 @@
 package sysinfo
 
 import (
-	"fmt"
 	"os"
 	"os/user"
 )
 
-func collectHeader() (string, error) {
+func collectUsername() (string, error) {
 	user_, err := user.Current()
 	if err != nil {
 		return "", err
 	}
+	return user_.Username, nil
+}
 
-	hostname, err := os.Hostname()
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%s@%s", user_.Username, hostname), nil
+func collectHostname() (string, error) {
+	return os.Hostname()
 }

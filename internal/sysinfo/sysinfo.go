@@ -1,11 +1,16 @@
 package sysinfo
 
 import (
+	"github.com/av1ppp/chafa-welcome/internal/config"
 	"strings"
 )
 
 type SystemInfo struct {
-	Header   string
+	HeaderUsername  string
+	HeaderAt        string
+	HeaderHostname  string
+	HeaderUnderline string
+
 	OS       string
 	Kernel   string
 	Uptime   string
@@ -16,10 +21,17 @@ type SystemInfo struct {
 	Memory   string
 	LocalIP  string
 	GlobalIP string
+
+	conf *config.Config
 }
 
-func Collect() (*SystemInfo, error) {
-	header, err := collectHeader()
+func Collect(conf *config.Config) (*SystemInfo, error) {
+	username, err := collectUsername()
+	if err != nil {
+		return nil, err
+	}
+
+	hostname, err := collectHostname()
 	if err != nil {
 		return nil, err
 	}
@@ -74,10 +86,12 @@ func Collect() (*SystemInfo, error) {
 		return nil, err
 	}
 
-	// TODO add: username, hostname, local ip, shell, cpu, gpu, ram
-
 	return &SystemInfo{
-		Header:   header,
+		HeaderUsername:  username,
+		HeaderAt:        "@",
+		HeaderHostname:  hostname,
+		HeaderUnderline: strings.Repeat("~", len(username)+1+len(hostname)),
+
 		OS:       os,
 		Kernel:   kernel,
 		Uptime:   uptime,
@@ -88,25 +102,46 @@ func Collect() (*SystemInfo, error) {
 		Memory:   memory,
 		GlobalIP: globalIP,
 		LocalIP:  localIP,
+
+		conf: conf,
 	}, nil
 }
 
 func (self *SystemInfo) String() string {
+	colorUsername := themeToColor(self.conf.Theme.HeaderUsername)
+	colorAt := themeToColor(self.conf.Theme.HeaderAt)
+	colorHostname := themeToColor(self.conf.Theme.HeaderHostname)
+	colorUnderline := themeToColor(self.conf.Theme.HeaderUnderline)
+
+	colorKey := themeToColor(self.conf.Theme.BodyKey)
+	colorSeparator := themeToColor(self.conf.Theme.BodySeparator)
+	colorValue := themeToColor(self.conf.Theme.BodyValue)
+
 	builder := strings.Builder{}
 
-	builder.WriteString(self.Header + "\n")
-	builder.WriteString(strings.Repeat("~", len(self.Header)) + "\n")
+	builder.WriteString(colorUsername.Sprint(self.HeaderUsername))
+	builder.WriteString(colorAt.Sprint(self.HeaderAt))
+	builder.WriteString(colorHostname.Sprint(self.HeaderHostname) + "\n")
+	builder.WriteString(colorUnderline.Sprint(self.HeaderUnderline) + "\n")
 
-	builder.WriteString("OS: " + self.OS + "\n")
-	builder.WriteString("Kernel: " + self.Kernel + "\n")
-	builder.WriteString("Uptime: " + self.Uptime + "\n")
-	builder.WriteString("Packages: " + self.Packages + "\n")
-	builder.WriteString("Shell: " + self.Shell + "\n")
-	builder.WriteString("Terminal: " + self.Terminal + "\n")
-	builder.WriteString("CPU: " + self.CPU + "\n")
-	builder.WriteString("Memory: " + self.Memory + "\n")
-	builder.WriteString("Local IP: " + self.LocalIP + "\n")
-	builder.WriteString("Global IP: " + self.GlobalIP + "\n")
+	body := map[string]string{
+		"OS":        self.OS,
+		"Kernel":    self.Kernel,
+		"Uptime":    self.Uptime,
+		"Packages":  self.Packages,
+		"Shell":     self.Shell,
+		"Terminal":  self.Terminal,
+		"CPU":       self.CPU,
+		"Memory":    self.Memory,
+		"Local IP":  self.LocalIP,
+		"Global IP": self.GlobalIP,
+	}
+
+	for key, value := range body {
+		builder.WriteString(colorKey.Sprint(key))
+		builder.WriteString(colorSeparator.Sprint(":") + " ")
+		builder.WriteString(colorValue.Sprint(value) + "\n")
+	}
 
 	str := builder.String()
 	if len(str) > 0 {

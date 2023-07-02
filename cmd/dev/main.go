@@ -32,7 +32,7 @@ func innerMain() error {
 	fmt.Println("ChafaBin:", conf.ChafaBin)
 	fmt.Println("Width:", conf.Width)
 
-	info, err := sysinfo.Collect()
+	info, err := sysinfo.Collect(conf)
 	if err != nil {
 		return err
 	}

@@ -6,9 +6,21 @@ import (
 )
 
 type Config struct {
-	PicturePath string `toml:"picture_path"`
-	ChafaBin    string `toml:"chafa"`
-	Width       int    `toml:"width"`
+	PicturePath string      `toml:"picture_path"`
+	ChafaBin    string      `toml:"chafa"`
+	Width       int         `toml:"width"`
+	Theme       configTheme `toml:"theme"`
+}
+
+type configTheme struct {
+	HeaderUsername  string `toml:"header_username"`
+	HeaderAt        string `toml:"header_at"`
+	HeaderHostname  string `toml:"header_hostname"`
+	HeaderUnderline string `toml:"header_underline"`
+
+	BodyKey       string `toml:"body_key"`
+	BodySeparator string `toml:"body_separator"`
+	BodyValue     string `toml:"body_value"`
 }
 
 func ParseFile(name string) (*Config, error) {
@@ -50,7 +62,9 @@ func createDefaultFileIfNotExists(name string) error {
 			return err
 		}
 
-		err = toml.NewEncoder(file).Encode(conf)
+		enc := toml.NewEncoder(file)
+		enc.Indent = ""
+		err = enc.Encode(conf)
 		if err != nil {
 			return err
 		}
