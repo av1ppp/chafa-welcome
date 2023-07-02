@@ -3,13 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/av1ppp/chafa-welcome/internal/sysinfo"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/av1ppp/chafa-welcome/internal/config"
 	"github.com/av1ppp/chafa-welcome/internal/global"
+	"github.com/av1ppp/chafa-welcome/internal/sysinfo"
 )
 
 func main() {
@@ -29,9 +29,9 @@ func innerMain() error {
 		return err
 	}
 
-	fmt.Println("PicturePath:", config_.PicturePath())
-	fmt.Println("ChafaBin:", config_.ChafaBin())
-	fmt.Println("Width:", config_.Width())
+	fmt.Println("PicturePath:", config_.PicturePath)
+	fmt.Println("ChafaBin:", config_.ChafaBin)
+	fmt.Println("Width:", config_.Width)
 
 	info, err := sysinfo.Collect()
 	if err != nil {
@@ -47,7 +47,7 @@ func innerMain() error {
 	}
 	chafaLines := strings.Split(chafaOutput, "\n")
 	chafaNumberLines := len(chafaLines) - 1
-	chafaEmptyRow := strings.Repeat(" ", config_.Width())
+	chafaEmptyRow := strings.Repeat(" ", config_.Width)
 	fmt.Println("chafaNumberLines:", chafaNumberLines)
 
 	maxLines := 0
@@ -84,13 +84,13 @@ func innerMain() error {
 func chafaExecute(c *config.Config) (string, error) {
 	args := []string{}
 
-	if c.Width() != 0 {
-		args = append(args, fmt.Sprintf("--size=%d", c.Width()))
+	if c.Width != 0 {
+		args = append(args, fmt.Sprintf("--size=%d", c.Width))
 	}
 
-	args = append(args, c.PicturePath())
+	args = append(args, c.PicturePath)
 
-	cmd := exec.Command(c.ChafaBin(), args...)
+	cmd := exec.Command(c.ChafaBin, args...)
 	stdout := &bytes.Buffer{}
 	cmd.Stdout = stdout
 

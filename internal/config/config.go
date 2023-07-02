@@ -1,25 +1,14 @@
 package config
 
 import (
+	"github.com/BurntSushi/toml"
 	"os"
 )
 
 type Config struct {
-	picturePath string
-	chafaBin    string
-	width       int
-}
-
-func (self *Config) PicturePath() string {
-	return self.picturePath
-}
-
-func (self *Config) ChafaBin() string {
-	return self.chafaBin
-}
-
-func (self *Config) Width() int {
-	return self.width
+	PicturePath string `toml:"picture_path"`
+	ChafaBin    string `toml:"chafa"`
+	Width       int    `toml:"width"`
 }
 
 func ParseFile(name string) (*Config, error) {
@@ -33,16 +22,19 @@ func ParseFile(name string) (*Config, error) {
 		return nil, err
 	}
 
-	config, err := unmarshal(data)
+	conf := &Config{}
+
+	err = toml.Unmarshal(data, conf)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = validate(config); err != nil {
+	err = validate(conf)
+	if err != nil {
 		return nil, err
 	}
 
-	return config, nil
+	return conf, nil
 }
 
 func createDefaultFileIfNotExists(name string) error {
@@ -51,7 +43,19 @@ func createDefaultFileIfNotExists(name string) error {
 		if !os.IsNotExist(err) {
 			return err
 		}
-		return os.WriteFile(name, defaultConfigData, os.ModePerm)
+
+		conf := getDefaultConfig()
+		file, err := os.Create(name)
+		if err != nil {
+			return err
+		}
+
+		err = toml.NewEncoder(file).Encode(conf)
+		if err != nil {
+			return err
+		}
+
+		return file.Close()
 	}
 	return nil
 }
