@@ -1,10 +1,16 @@
 package config
 
 type Config struct {
-	ChafaBin string      `toml:"chafa"`
-	Image    configImage `toml:"image"`
-	Body     configBody  `toml:"body"`
-	Theme    configTheme `toml:"theme"`
+	ChafaBin string       `toml:"chafa"`
+	Offset   configOffset `toml:"offset"`
+	Image    configImage  `toml:"image"`
+	Body     configBody   `toml:"body"`
+	Theme    configTheme  `toml:"theme"`
+}
+
+type configOffset struct {
+	X int `toml:"x"`
+	Y int `toml:"y"`
 }
 
 type configImage struct {
@@ -13,6 +19,7 @@ type configImage struct {
 }
 
 type configBody struct {
+	Gap      int                `toml:"gap"`
 	OS       configBodyOS       `toml:"os"`
 	Kernel   configBodyKernel   `toml:"kernel"`
 	Terminal configBodyTerminal `toml:"terminal"`

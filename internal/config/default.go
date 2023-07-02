@@ -3,11 +3,16 @@ package config
 func getDefaultConfig() *Config {
 	return &Config{
 		ChafaBin: "chafa",
+		Offset: configOffset{
+			X: 1,
+			Y: 0,
+		},
 		Image: configImage{
 			Source: "/path/to/image.jpg",
 			Size:   32,
 		},
 		Body: configBody{
+			Gap: 2,
 			OS: configBodyOS{
 				Include: true,
 			},
