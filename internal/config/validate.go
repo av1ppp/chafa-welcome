@@ -8,22 +8,22 @@ import (
 
 func validate(config *Config) error {
 	// picturePath
-	if config.PicturePath == "" {
-		return errors.Wrap(&errorParameterMustBeSpecified{"Picture"}, validationErr.Error())
+	if config.Image.Source == "" {
+		return errors.Wrap(&errorParameterMustBeSpecified{"image.source"}, validationErr.Error())
 	}
-	_, err := os.Stat(config.PicturePath)
+	_, err := os.Stat(config.Image.Source)
 	if err != nil {
 		return errors.Wrap(err, validationErr.Error())
 	}
 
 	// chafaBin
 	if config.ChafaBin == "" {
-		return errors.Wrap(&errorParameterMustBeSpecified{"Chafa"}, validationErr.Error())
+		return errors.Wrap(&errorParameterMustBeSpecified{"chafa"}, validationErr.Error())
 	}
 
 	// width
-	if config.Width == 0 {
-		return errors.Wrap(&errorParameterMustBeSpecified{"Width"}, validationErr.Error())
+	if config.Image.Size == 0 {
+		return errors.Wrap(&errorParameterMustBeSpecified{"image.size"}, validationErr.Error())
 	}
 
 	return nil

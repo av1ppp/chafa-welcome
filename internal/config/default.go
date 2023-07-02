@@ -2,9 +2,11 @@ package config
 
 func getDefaultConfig() *Config {
 	return &Config{
-		PicturePath: "/home/user/Pictures/welcome.png",
-		ChafaBin:    "chafa",
-		Width:       32,
+		ChafaBin: "chafa",
+		Image: configImage{
+			Source: "/home/user/Pictures/welcome.png",
+			Size:   32,
+		},
 		Theme: configTheme{
 			HeaderUsername:  "fgred bold",
 			HeaderAt:        "bold",

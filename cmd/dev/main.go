@@ -28,9 +28,9 @@ func innerMain() error {
 		return err
 	}
 
-	fmt.Println("PicturePath:", conf.PicturePath)
-	fmt.Println("ChafaBin:", conf.ChafaBin)
-	fmt.Println("Width:", conf.Width)
+	fmt.Println("Source:", conf.Image.Source)
+	fmt.Println("Chafa:", conf.ChafaBin)
+	fmt.Println("Siz:", conf.Image.Size)
 
 	info, err := sysinfo.Collect(conf)
 	if err != nil {
@@ -40,13 +40,13 @@ func innerMain() error {
 	infoNumberLines := len(infoLines)
 	fmt.Println("infoNumberLines:", infoNumberLines)
 
-	chafaOutput, err := chafa.Execute(conf.ChafaBin, conf.PicturePath, chafa.WithSize(conf.Width, 0))
+	chafaOutput, err := chafa.Execute(conf.ChafaBin, conf.Image.Source, chafa.WithSize(conf.Image.Size, 0))
 	if err != nil {
 		return err
 	}
 	chafaLines := strings.Split(chafaOutput, "\n")
 	chafaNumberLines := len(chafaLines) - 1
-	chafaEmptyRow := strings.Repeat(" ", conf.Width)
+	chafaEmptyRow := strings.Repeat(" ", conf.Image.Size)
 	fmt.Println("chafaNumberLines:", chafaNumberLines)
 
 	maxLines := 0

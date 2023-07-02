@@ -6,10 +6,14 @@ import (
 )
 
 type Config struct {
-	PicturePath string      `toml:"picture_path"`
-	ChafaBin    string      `toml:"chafa"`
-	Width       int         `toml:"width"`
-	Theme       configTheme `toml:"theme"`
+	ChafaBin string      `toml:"chafa"`
+	Image    configImage `toml:"image"`
+	Theme    configTheme `toml:"theme"`
+}
+
+type configImage struct {
+	Source string `toml:"source"`
+	Size   int    `toml:"size"`
 }
 
 type configTheme struct {
