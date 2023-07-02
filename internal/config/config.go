@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/BurntSushi/toml"
 	"os"
+
+	"github.com/pelletier/go-toml/v2"
 )
 
 type Config struct {
@@ -33,14 +34,19 @@ func ParseFile(name string) (*Config, error) {
 		return nil, err
 	}
 
-	data, err := os.ReadFile(name)
+	file, err := os.Open(name)
 	if err != nil {
 		return nil, err
 	}
 
 	conf := &Config{}
 
-	err = toml.Unmarshal(data, conf)
+	err = toml.NewDecoder(file).Decode(conf)
+	if err != nil {
+		return nil, err
+	}
+
+	err = file.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +73,8 @@ func createDefaultFileIfNotExists(name string) error {
 		}
 
 		enc := toml.NewEncoder(file)
-		enc.Indent = ""
+		enc.SetIndentTables(false)
+		enc.SetArraysMultiline(true)
 		err = enc.Encode(conf)
 		if err != nil {
 			return err
