@@ -1,11 +1,14 @@
 package sysinfo
 
 import (
-	"github.com/shirou/gopsutil/v3/mem"
 	"strconv"
+
+	"github.com/shirou/gopsutil/v3/mem"
+
+	"github.com/av1ppp/chafa-welcome/internal/config"
 )
 
-func collectMemory() (string, error) {
+func collectMemory(conf *config.Config) (string, error) {
 	vm, err := mem.VirtualMemory()
 	if err != nil {
 		return "", err
@@ -15,5 +18,8 @@ func collectMemory() (string, error) {
 	totalMbStr := strconv.FormatUint(bToMB(vm.Total), 10)
 	usedPercentMbStr := strconv.Itoa(int(vm.UsedPercent))
 
-	return usedMbStr + "MB / " + totalMbStr + "MB" + " (" + usedPercentMbStr + "%)", nil
+	if conf.Body.Memory.Percent {
+		return usedMbStr + "MB / " + totalMbStr + "MB" + " (" + usedPercentMbStr + "%)", nil
+	}
+	return usedMbStr + "MB / " + totalMbStr + "MB", nil
 }

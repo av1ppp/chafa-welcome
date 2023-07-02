@@ -1,14 +1,9 @@
 package config
 
-import (
-	"os"
-
-	"github.com/pelletier/go-toml/v2"
-)
-
 type Config struct {
 	ChafaBin string      `toml:"chafa"`
 	Image    configImage `toml:"image"`
+	Body     configBody  `toml:"body"`
 	Theme    configTheme `toml:"theme"`
 }
 
@@ -17,70 +12,68 @@ type configImage struct {
 	Size   int    `toml:"size"`
 }
 
+type configBody struct {
+	OS       configBodyOS       `toml:"os"`
+	Kernel   configBodyKernel   `toml:"kernel"`
+	Terminal configBodyTerminal `toml:"terminal"`
+	Uptime   configBodyUptime   `toml:"uptime"`
+	Packages configBodyPackages `toml:"packages"`
+	Shell    configBodyShell    `toml:"shell"`
+	CPU      configBodyCPU      `toml:"cpu"`
+	Memory   configBodyMemory   `toml:"memory"`
+	LocalIP  configBodyLocalIP  `toml:"local_ip"`
+	GlobalIP configBodyGlobalIP `toml:"global_ip"`
+}
+
+type configBodyOS struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyKernel struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyTerminal struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyUptime struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyPackages struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyShell struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyCPU struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyMemory struct {
+	Include bool `toml:"include"`
+	Percent bool `toml:"percent"`
+}
+
+type configBodyLocalIP struct {
+	Include bool `toml:"include"`
+}
+
+type configBodyGlobalIP struct {
+	Include bool   `toml:"include"`
+	Source  string `toml:"source"`
+}
+
 type configTheme struct {
-	HeaderUsername  string `toml:"header_username"`
-	HeaderAt        string `toml:"header_at"`
-	HeaderHostname  string `toml:"header_hostname"`
-	HeaderUnderline string `toml:"header_underline"`
+	HeaderUsername  string `toml:"username"`
+	HeaderAt        string `toml:"at"`
+	HeaderHostname  string `toml:"hostname"`
+	HeaderUnderline string `toml:"underline"`
 
-	BodyKey       string `toml:"body_key"`
-	BodySeparator string `toml:"body_separator"`
-	BodyValue     string `toml:"body_value"`
-}
-
-func ParseFile(name string) (*Config, error) {
-	err := createDefaultFileIfNotExists(name)
-	if err != nil {
-		return nil, err
-	}
-
-	file, err := os.Open(name)
-	if err != nil {
-		return nil, err
-	}
-
-	conf := &Config{}
-
-	err = toml.NewDecoder(file).Decode(conf)
-	if err != nil {
-		return nil, err
-	}
-
-	err = file.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	err = validate(conf)
-	if err != nil {
-		return nil, err
-	}
-
-	return conf, nil
-}
-
-func createDefaultFileIfNotExists(name string) error {
-	_, err := os.Stat(name)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-
-		conf := getDefaultConfig()
-		file, err := os.Create(name)
-		if err != nil {
-			return err
-		}
-
-		enc := toml.NewEncoder(file)
-		enc.SetIndentTables(false)
-		enc.SetArraysMultiline(true)
-		err = enc.Encode(conf)
-		if err != nil {
-			return err
-		}
-
-		return file.Close()
-	}
-	return nil
+	BodyKey       string `toml:"key"`
+	BodySeparator string `toml:"separator"`
+	BodyValue     string `toml:"value"`
 }

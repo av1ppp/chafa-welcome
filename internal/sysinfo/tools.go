@@ -1,6 +1,7 @@
 package sysinfo
 
 import (
+	"github.com/av1ppp/chafa-welcome/internal/config"
 	"os"
 	"os/exec"
 	"strings"
@@ -110,4 +111,13 @@ func themeToColor(theme string) *color.Color {
 	}
 
 	return color.New(attrs...)
+}
+
+type collectFunc = func(conf *config.Config) (string, error)
+
+func collectIfInclude(include bool, conf *config.Config, collect collectFunc) (string, error) {
+	if include {
+		return collect(conf)
+	}
+	return "", nil
 }

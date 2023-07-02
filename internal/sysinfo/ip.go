@@ -1,15 +1,19 @@
 package sysinfo
 
-import "strings"
+import (
+	"strings"
 
-func collectLocalIP() (string, error) {
+	"github.com/av1ppp/chafa-welcome/internal/config"
+)
+
+func collectLocalIP(conf *config.Config) (string, error) {
 	localIP, err := execute("sh", "-c", "ip route get 1.2.3.4 | awk '{print $7}'")
 	if err != nil {
-		return "-", nil
+		return "", err
 	}
 	return strings.TrimSpace(localIP), nil
 }
 
-func collectGlobalIP() (string, error) {
+func collectGlobalIP(conf *config.Config) (string, error) {
 	return execute("curl", "ifconfig.me")
 }

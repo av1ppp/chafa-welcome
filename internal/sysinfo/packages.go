@@ -3,9 +3,11 @@ package sysinfo
 import (
 	"fmt"
 	"strings"
+
+	"github.com/av1ppp/chafa-welcome/internal/config"
 )
 
-func collectPackages() (string, error) {
+func collectPackages(conf *config.Config) (string, error) {
 	results := []string{}
 	count := 0
 
@@ -37,9 +39,5 @@ func collectPackages() (string, error) {
 		results = append(results, fmt.Sprintf("%d flatpak", count))
 	}
 
-	result := strings.Join(results, ", ")
-	if result != "" {
-		return result, nil
-	}
-	return "-", nil
+	return strings.Join(results, ", "), nil
 }

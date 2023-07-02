@@ -1,10 +1,13 @@
 package sysinfo
 
 import (
+	"errors"
 	"os"
+
+	"github.com/av1ppp/chafa-welcome/internal/config"
 )
 
-func collectTerminal() (string, error) {
+func collectTerminal(conf *config.Config) (string, error) {
 	termProgram, exists := os.LookupEnv("TERM_PROGRAM")
 	if exists {
 		switch termProgram {
@@ -17,7 +20,7 @@ func collectTerminal() (string, error) {
 		}
 	}
 
-	term, exists := os.LookupEnv("TERM")
+	term, termExists := os.LookupEnv("TERM")
 	if term == "tw52" || term == "tw100" {
 		return "TosWin2", nil
 	}
@@ -30,8 +33,8 @@ func collectTerminal() (string, error) {
 		return "Windows Terminal", nil
 	}
 
-	if term != "" {
-		return term, nil
+	if !termExists {
+		return "", errors.New("TERM environment not set")
 	}
-	return "-", nil
+	return term, nil
 }

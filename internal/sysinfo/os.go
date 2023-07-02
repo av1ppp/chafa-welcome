@@ -1,10 +1,11 @@
 package sysinfo
 
 import (
+	"github.com/av1ppp/chafa-welcome/internal/config"
 	"runtime"
 )
 
-func collectOS() (string, error) {
+func collectOS(conf *config.Config) (string, error) {
 	data, err := execute("sh", "-c", "cat /etc/*-release")
 	if err != nil {
 		return "", err
