@@ -3,7 +3,6 @@ package chafa
 import (
 	"crypto/md5"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -26,7 +25,6 @@ func Execute(conf *config.Config) (string, error) {
 	_, err = os.Stat(cacheName)
 
 	if err == nil {
-		log.Println("Load from cache")
 		data, err := os.ReadFile(cacheName)
 		if err != nil {
 			return "", err
@@ -45,7 +43,6 @@ func Execute(conf *config.Config) (string, error) {
 			return "", err
 		}
 
-		log.Println("Save to cache")
 		return data, nil
 	}
 
