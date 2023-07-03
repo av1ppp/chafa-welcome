@@ -45,7 +45,7 @@ func getDefaultConfig() *Config {
 				Include: true,
 			},
 			GlobalIP: configBodyGlobalIP{
-				Include: true,
+				Include: false,
 				Source:  "ifconfig.me",
 			},
 		},
