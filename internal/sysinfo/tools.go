@@ -1,12 +1,13 @@
 package sysinfo
 
 import (
-	"github.com/av1ppp/chafa-welcome/internal/config"
 	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/fatih/color"
+
+	"github.com/av1ppp/chafa-welcome/internal/config"
 )
 
 func readFile(name string) (string, error) {
