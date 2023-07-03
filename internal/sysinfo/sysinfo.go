@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const systemInfoBodyMaxRows = 10
+
 type SystemInfo struct {
 	HeaderUsername  string
 	HeaderAt        string
@@ -104,26 +106,10 @@ func (self *SystemInfo) String() string {
 	builder.WriteString(colorHostname.Sprint(self.HeaderHostname) + "\n")
 	builder.WriteString(colorUnderline.Sprint(self.HeaderUnderline) + "\n")
 
-	body := [][2]string{
-		{"OS", self.OS},
-		{"Kernel", self.Kernel},
-		{"Uptime", self.Uptime},
-		{"Packages", self.Packages},
-		{"Shell", self.Shell},
-		{"Terminal", self.Terminal},
-		{"CPU", self.CPU},
-		{"Memory", self.Memory},
-		{"Local IP", self.LocalIP},
-		{"Global IP", self.GlobalIP},
-	}
-
-	for _, row := range body {
-		if row[1] == "" {
-			continue
-		}
+	for _, row := range self.getBody() {
 		builder.WriteString(colorKey.Sprint(row[0]))
-		builder.WriteString(colorSeparator.Sprint(":") + " ")
-		builder.WriteString(colorValue.Sprint(row[1]) + "\n")
+		builder.WriteString(colorSeparator.Sprint(":") + row[1])
+		builder.WriteString(colorValue.Sprint(row[2]) + "\n")
 	}
 
 	str := builder.String()
@@ -131,4 +117,47 @@ func (self *SystemInfo) String() string {
 		str = str[:len(str)-1]
 	}
 	return str
+}
+
+type bodyRow = [3]string
+
+func (self *SystemInfo) getBody() []bodyRow {
+	body_ := make([]bodyRow, 0, systemInfoBodyMaxRows)
+
+	if self.OS != "" {
+		body_ = append(body_, bodyRow{"OS", " ", self.OS})
+	}
+	if self.Kernel != "" {
+		body_ = append(body_, bodyRow{"Kernel", " ", self.Kernel})
+	}
+	if self.Uptime != "" {
+		body_ = append(body_, bodyRow{"Uptime", " ", self.Uptime})
+	}
+	if self.Packages != "" {
+		body_ = append(body_, bodyRow{"Packages", " ", self.Packages})
+	}
+	if self.Shell != "" {
+		body_ = append(body_, bodyRow{"Shell", " ", self.Shell})
+	}
+	if self.Terminal != "" {
+		body_ = append(body_, bodyRow{"Terminal", " ", self.Terminal})
+	}
+	if self.CPU != "" {
+		body_ = append(body_, bodyRow{"CPU", " ", self.CPU})
+	}
+	if self.Memory != "" {
+		body_ = append(body_, bodyRow{"Memory", " ", self.Memory})
+	}
+	if self.LocalIP != "" {
+		body_ = append(body_, bodyRow{"LocalIP", " ", self.LocalIP})
+	}
+	if self.GlobalIP != "" {
+		body_ = append(body_, bodyRow{"GlobalIP", " ", self.GlobalIP})
+	}
+
+	if self.conf.Body.AlignColumn {
+		applyAlignColumn(body_)
+	}
+
+	return body_
 }

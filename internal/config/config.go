@@ -19,7 +19,9 @@ type configImage struct {
 }
 
 type configBody struct {
-	Gap      int                `toml:"gap"`
+	Gap         int  `toml:"gap"`
+	AlignColumn bool `toml:"align_column"`
+
 	OS       configBodyOS       `toml:"os"`
 	Kernel   configBodyKernel   `toml:"kernel"`
 	Terminal configBodyTerminal `toml:"terminal"`

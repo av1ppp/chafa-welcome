@@ -121,3 +121,17 @@ func collectIfInclude(include bool, conf *config.Config, collect collectFunc) (s
 	}
 	return "", nil
 }
+
+func applyAlignColumn(body []bodyRow) {
+	maxColumnWidth := 0
+
+	for _, row := range body {
+		if len(row[0]) > maxColumnWidth {
+			maxColumnWidth = len(row[0])
+		}
+	}
+
+	for i, row := range body {
+		body[i][1] = row[1] + strings.Repeat(" ", maxColumnWidth-len(row[0]))
+	}
+}

@@ -12,7 +12,9 @@ func getDefaultConfig() *Config {
 			Size:   32,
 		},
 		Body: configBody{
-			Gap: 2,
+			Gap:         2,
+			AlignColumn: true,
+
 			OS: configBodyOS{
 				Include: true,
 			},
