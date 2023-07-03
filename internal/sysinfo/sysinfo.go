@@ -149,10 +149,10 @@ func (self *SystemInfo) getBody() []bodyRow {
 		body_ = append(body_, bodyRow{"Memory", " ", self.Memory})
 	}
 	if self.LocalIP != "" {
-		body_ = append(body_, bodyRow{"LocalIP", " ", self.LocalIP})
+		body_ = append(body_, bodyRow{"Local IP", " ", self.LocalIP})
 	}
 	if self.GlobalIP != "" {
-		body_ = append(body_, bodyRow{"GlobalIP", " ", self.GlobalIP})
+		body_ = append(body_, bodyRow{"Global IP", " ", self.GlobalIP})
 	}
 
 	if self.conf.Body.AlignColumn {
