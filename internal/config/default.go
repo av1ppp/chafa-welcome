@@ -8,8 +8,9 @@ func getDefaultConfig() *Config {
 			Y: 0,
 		},
 		Image: configImage{
-			Source: "/path/to/image.jpg",
-			Size:   32,
+			Source:  "/path/to/image.jpg",
+			Size:    32,
+			Symbols: "block+border+space-wide-inverted",
 		},
 		Body: configBody{
 			Gap:         2,

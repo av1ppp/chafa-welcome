@@ -33,7 +33,9 @@ func Execute(conf *config.Config) (string, error) {
 	}
 
 	if os.IsNotExist(err) {
-		data, err := chafa.Execute(conf.ChafaBin, conf.Image.Source, chafa.WithSize(conf.Image.Size, 0))
+		data, err := chafa.Execute(conf.ChafaBin, conf.Image.Source,
+			chafa.WithSize(conf.Image.Size, 0),
+			chafa.WithSymbols(conf.Image.Symbols))
 		if err != nil {
 			return "", err
 		}
@@ -50,6 +52,6 @@ func Execute(conf *config.Config) (string, error) {
 }
 
 func asHash(conf *config.Config) string {
-	data := strconv.Itoa(conf.Image.Size) + ";" + conf.Image.Source
+	data := strconv.Itoa(conf.Image.Size) + ";" + conf.Image.Symbols + ";" + conf.Image.Source
 	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }

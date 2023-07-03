@@ -14,8 +14,9 @@ type configOffset struct {
 }
 
 type configImage struct {
-	Source string `toml:"source"`
-	Size   int    `toml:"size"`
+	Source  string `toml:"source"`
+	Size    int    `toml:"size"`
+	Symbols string `toml:"symbols"`
 }
 
 type configBody struct {

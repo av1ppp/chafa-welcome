@@ -13,9 +13,12 @@ func WithSize(width, height int) string {
 	return "--size=" + strconv.Itoa(width) + "x" + strconv.Itoa(height)
 }
 
+func WithSymbols(symbols string) string {
+	return "--symbols=" + symbols
+}
+
 func Execute(bin string, image string, args ...string) (string, error) {
 	args = append(args, image)
-
 	cmd := exec.Command(bin, args...)
 	stdout := &bytes.Buffer{}
 	cmd.Stdout = stdout
