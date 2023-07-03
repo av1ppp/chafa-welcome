@@ -1,15 +1,14 @@
 package main
 
 import (
-	"crypto/md5"
 	"fmt"
+	"path/filepath"
+	"strings"
+
 	"github.com/av1ppp/chafa-welcome/internal/chafa"
 	"github.com/av1ppp/chafa-welcome/internal/config"
 	"github.com/av1ppp/chafa-welcome/internal/global"
 	"github.com/av1ppp/chafa-welcome/internal/sysinfo"
-	"path/filepath"
-	"strconv"
-	"strings"
 )
 
 func main() {
@@ -41,7 +40,7 @@ func innerMain() error {
 	infoNumberLines := len(infoLines)
 	fmt.Println("infoNumberLines:", infoNumberLines)
 
-	chafaOutput, err := chafa.Execute(conf.ChafaBin, conf.Image.Source, chafa.WithSize(conf.Image.Size, 0))
+	chafaOutput, err := chafa.Execute(conf)
 	if err != nil {
 		return err
 	}
@@ -82,9 +81,4 @@ func innerMain() error {
 
 	fmt.Println(resultBuilder.String())
 	return nil
-}
-
-func getConfigImageHash(conf *config.Config) string {
-	data := strconv.Itoa(conf.Image.Size) + ";" + conf.Image.Source
-	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }

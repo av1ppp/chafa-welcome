@@ -11,6 +11,11 @@ var (
 	homeDirOnce = &sync.Once{}
 )
 
+const (
+	ModeFile = 0664
+	ModeDir  = os.ModePerm
+)
+
 func HomeDir() string {
 	homeDirOnce.Do(func() {
 		userHomeDir, err := os.UserHomeDir()
